@@ -1,7 +1,7 @@
 import { map } from "lodash";
 import { useState, useEffect } from "react";
 import { Select, Box, FormLabel, HStack } from "@chakra-ui/react";
-import http from "../../http";
+import http from "../../../shared/util/http";
 
 export default function SelectCustomer({ onSelect }) {
   const [customers, setCustomers] = useState(null);
@@ -32,7 +32,7 @@ export default function SelectCustomer({ onSelect }) {
       <Box style={{ width: "200px" }}>
         <Select onChange={selectCustomer}>
           {map(customers, (customer) => (
-            <option value={customer.id}>{customer.name}</option>
+            <option key={customer.id} value={customer.id}>{customer.name}</option>
           ))}
         </Select>
       </Box>

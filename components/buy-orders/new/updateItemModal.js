@@ -1,6 +1,15 @@
-import { find, isEmpty, map } from "lodash";
-import { useState, useEffect } from "react";
+import { map } from "lodash";
+import React, { useEffect, useState } from "react";
 import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  chakra,
+  Box,
+  Heading,
   Button,
   Modal,
   ModalOverlay,
@@ -14,41 +23,39 @@ import {
   FormLabel,
   Select,
   Input,
+  Flex,
+  Spacer,
 } from "@chakra-ui/react";
 
-export default function AddProductModal({ products, onSave }) {
-  const [productId, setProductId] = useState(null);
-  const [quantity, setQuantity] = useState(0);
-  const [price, setPrice] = useState(0);
-
-  useEffect(() => {
-    if (!productId && !isEmpty(products)) {
-      setProductId(products[0].id);
-    }
-  });
+export default function UpdateProductModal({
+  products,
+  product,
+  onProductUpdated,
+}) {
+  const [productId, setProductId] = useState(product.id);
+  const [quantity, setQuantity] = useState(product.quantity);
+  const [price, setPrice] = useState(product.price);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleSave = async () => {
-    onSave({
-      id: productId,
-      name: find(products, { id: productId })?.name,
-      quantity,
-      price,
-    });
+    onProductUpdated({ id: productId, quantity, price });
     onClose();
   };
 
   return (
     <>
-      <Button onClick={onOpen} colorScheme="teal" size="lg">
-        Thêm sản phẩm
-      </Button>
+      <a
+        onClick={onOpen}
+        style={{ color: "var(--chakra-colors-teal-500)", cursor: "pointer" }}
+      >
+        {product.name}
+      </a>
 
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Thêm sản phẩm</ModalHeader>
+          <ModalHeader>Cập nhật sản phẩm</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
@@ -58,11 +65,11 @@ export default function AddProductModal({ products, onSave }) {
                 onChange={(e) => setProductId(e.target.value)}
               >
                 {map(products, (product) => (
-                  <option value={product.id}>{product.name}</option>
+                  <option key={product.id} value={product.id}>{product.name}</option>
                 ))}
               </Select>
             </FormControl>
-            <FormControl mt="5">
+            <FormControl mt="3">
               <FormLabel>Số lượng</FormLabel>
               <Input
                 placeholder="Số lượng"
@@ -70,10 +77,10 @@ export default function AddProductModal({ products, onSave }) {
                 onChange={(e) => setQuantity(+e.target.value)}
               />
             </FormControl>
-            <FormControl mt="5">
-              <FormLabel>Giá mua</FormLabel>
+            <FormControl mt="3">
+              <FormLabel>Giá bán</FormLabel>
               <Input
-                placeholder="Giá mua"
+                placeholder="Giá bán"
                 value={price}
                 onChange={(e) => setPrice(+e.target.value)}
               />

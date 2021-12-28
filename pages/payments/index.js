@@ -1,11 +1,11 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Box, Heading, Button, Flex, Spacer } from "@chakra-ui/react";
-import http from "../http";
+import http from "../../shared/util/http";
 import { formatCurrency } from "../../shared/util/formatter";
-import Header from "../../shared/component/header";
-import DataTable from "../../shared/component/dataTable";
-import AddPaymentModal from "./addPaymentModal";
+import Header from "../../components/common/header";
+import DataTable from "../../components/common/dataTable";
+import AddPaymentModal from "../../components/payments/addPaymentModal";
 
 const CustomTableCell = ({ value: initialValue, column: { id } }) => {
   if (id === "amount") {

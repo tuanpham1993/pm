@@ -13,43 +13,42 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
-import http from "../http";
+import http from "../../shared/util/http";
 
-export default function AddCustomerModal({ onSave }) {
-  const [name, setName] = useState("");
-  const [debt, setDebt] = useState(0);
 
-  const addCustomer = async () => {
-    await http.post("customers", {
+export default function UpdateSupplierModal({ supplier, onSupplierUpdated }) {
+  const [name, setName] = useState(supplier.name);
+  const [debt, setDebt] = useState(supplier.debt);
+
+  const updateSupplier = async () => {
+    await http.patch(`suppliers/${supplier.id}`, {
       name,
       debt,
     });
   };
 
-  const clear = () => {
-    setName("");
-    setDebt(0);
-  };
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleSave = async () => {
-    await addCustomer();
-    onSave();
+    await updateSupplier();
+    onSupplierUpdated({ id: supplier.id, name, debt });
+    // onSave();
     onClose();
-    clear();
   };
 
   return (
     <>
-      <Button onClick={onOpen} colorScheme="teal" size="lg">
-        Thêm
-      </Button>
+      <a
+        onClick={onOpen}
+        style={{ color: "var(--chakra-colors-teal-500)", cursor: "pointer" }}
+      >
+        {supplier.name}
+      </a>
 
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Thêm khách hàng</ModalHeader>
+          <ModalHeader>Cập nhật nhà cung cấp</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>

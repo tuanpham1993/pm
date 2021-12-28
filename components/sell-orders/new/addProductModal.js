@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { find, isEmpty, map } from "lodash";
+import { useState, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -13,45 +14,48 @@ import {
   FormLabel,
   Select,
   Input,
+  Flex,
+  Spacer,
 } from "@chakra-ui/react";
-import http from "../http";
 
-export default function AddProductModal({ onSave }) {
-  const [name, setName] = useState("");
-  const [unit, setUnit] = useState("Thùng");
+export default function AddProductModal({ products, onSave }) {
+  const [productId, setProductId] = useState(null);
   const [quantity, setQuantity] = useState(0);
-  const [inputPrice, setInputPrice] = useState(0);
-
-  const addProduct = async () => {
-    await http.post("products", {
-      name,
-      unit,
-      quantity,
-      inputPrice,
-    });
-  };
+  const [price, setPrice] = useState(0);
 
   const clear = () => {
-    setName("");
-    setUnit("Thùng");
+    setProductId(null);
     setQuantity(0);
-    setInputPrice(0);
+    setPrice(0);
   };
+
+  useEffect(() => {
+    if (!productId && !isEmpty(products)) {
+      setProductId(products[0].id);
+    }
+  });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleSave = async () => {
-    await addProduct();
-    onSave();
+    onSave({
+      id: productId,
+      name: find(products, { id: productId })?.name,
+      quantity,
+      price,
+    });
     onClose();
     clear();
   };
 
   return (
     <>
-      <Button onClick={onOpen} colorScheme="teal" size="lg">
-        Thêm
-      </Button>
+      <Flex>
+        <Spacer />
+        <Button onClick={onOpen} colorScheme="teal" size="lg">
+          Thêm sản phẩm
+        </Button>
+      </Flex>
 
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -61,20 +65,16 @@ export default function AddProductModal({ onSave }) {
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Tên</FormLabel>
-              <Input
-                placeholder="Tên"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </FormControl>
-            {/* <FormControl mt={5}>
-              <FormLabel>Đơn vị</FormLabel>
-              <Select value={unit} onChange={(e) => setUnit(e.target.value)}>
-                <option>Thùng</option>
-                <option>Bì</option>
+              <Select
+                value={productId}
+                onChange={(e) => setProductId(e.target.value)}
+              >
+                {map(products, (product) => (
+                  <option key={product.id} value={product.id}>{product.name}</option>
+                ))}
               </Select>
-            </FormControl> */}
-            <FormControl mt={5}>
+            </FormControl>
+            <FormControl mt="5">
               <FormLabel>Số lượng</FormLabel>
               <Input
                 placeholder="Số lượng"
@@ -82,12 +82,12 @@ export default function AddProductModal({ onSave }) {
                 onChange={(e) => setQuantity(+e.target.value)}
               />
             </FormControl>
-            <FormControl mt={5}>
-              <FormLabel>Giá vốn</FormLabel>
+            <FormControl mt="5">
+              <FormLabel>Giá bán</FormLabel>
               <Input
-                placeholder="Giá vốn"
-                value={inputPrice}
-                onChange={(e) => setInputPrice(+e.target.value)}
+                placeholder="Giá bán"
+                value={price}
+                onChange={(e) => setPrice(+e.target.value)}
               />
             </FormControl>
           </ModalBody>

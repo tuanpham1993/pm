@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box, Heading, Button, Flex, Spacer } from "@chakra-ui/react";
-import http from "../http";
+import http from "../../shared/util/http";
 import { formatCurrency } from "../../shared/util/formatter";
-import Header from "../../shared/component/header";
-import AddCustomerModal from "./addCustomerModal";
-import UpdateCustomerModal from "./updateCustomerModal";
-import DataTable from "../../shared/component/dataTable";
+import Header from "../../components/common/header";
+import AddCustomerModal from "../../components/customers/addCustomerModal";
+import UpdateCustomerModal from "../../components/customers/updateCustomerModal";
+import DataTable from "../../components/common/dataTable";
 
 const CustomTableCell = ({
   value: initialValue,

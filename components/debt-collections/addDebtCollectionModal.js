@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import http from "../http";
+import http from "../../shared/util/http";
 import {
   Button,
   Modal,
@@ -61,7 +61,7 @@ export default function AddDebtCollectionModal({ customers, onSave }) {
                 onChange={(e) => setCustomerId(e.target.value)}
               >
                 {map(customers, (customer) => (
-                  <option value={customer.id}>{customer.name}</option>
+                  <option key={customer.id} value={customer.id}>{customer.name}</option>
                 ))}
               </Select>
             </FormControl>

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { Button, Flex, Spacer } from "@chakra-ui/react";
 import { map } from "lodash";
-import http from "../../http";
+import http from "../../../shared/util/http";
 export default function AddSellOrder({ sellOrder }) {
   const router = useRouter()
 

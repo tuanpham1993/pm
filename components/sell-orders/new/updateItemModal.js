@@ -32,6 +32,7 @@ export default function UpdateProductModal({
   product,
   onProductUpdated,
 }) {
+  console.log({ onProductUpdated });
   const [productId, setProductId] = useState(product.id);
   const [quantity, setQuantity] = useState(product.quantity);
   const [price, setPrice] = useState(product.price);
@@ -65,7 +66,7 @@ export default function UpdateProductModal({
                 onChange={(e) => setProductId(e.target.value)}
               >
                 {map(products, (product) => (
-                  <option value={product.id}>{product.name}</option>
+                  <option key={product.id} value={product.id}>{product.name}</option>
                 ))}
               </Select>
             </FormControl>

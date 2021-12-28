@@ -1,6 +1,6 @@
 import { Spacer, Button, Flex } from "@chakra-ui/react";
 import { map } from "lodash";
-import http from "../../http";
+import http from "../../../shared/util/http";
 export default function AddBuyOrder({ buyOrder }) {
   const save = async () => {
     await http.post("buy-orders", {
@@ -10,6 +10,8 @@ export default function AddBuyOrder({ buyOrder }) {
         productId: item.id,
       })),
     });
+
+    router.push('/buy-orders')
   };
 
   return (

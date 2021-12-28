@@ -14,20 +14,12 @@ import {
   FormLabel,
   Select,
   Input,
-  Flex,
-  Spacer,
 } from "@chakra-ui/react";
 
 export default function AddProductModal({ products, onSave }) {
   const [productId, setProductId] = useState(null);
   const [quantity, setQuantity] = useState(0);
   const [price, setPrice] = useState(0);
-
-  const clear = () => {
-    setProductId(null);
-    setQuantity(0);
-    setPrice(0);
-  };
 
   useEffect(() => {
     if (!productId && !isEmpty(products)) {
@@ -45,17 +37,13 @@ export default function AddProductModal({ products, onSave }) {
       price,
     });
     onClose();
-    clear();
   };
 
   return (
     <>
-      <Flex>
-        <Spacer />
-        <Button onClick={onOpen} colorScheme="teal" size="lg">
-          Thêm sản phẩm
-        </Button>
-      </Flex>
+      <Button onClick={onOpen} colorScheme="teal" size="lg">
+        Thêm sản phẩm
+      </Button>
 
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -70,7 +58,7 @@ export default function AddProductModal({ products, onSave }) {
                 onChange={(e) => setProductId(e.target.value)}
               >
                 {map(products, (product) => (
-                  <option value={product.id}>{product.name}</option>
+                  <option key={product.id} value={product.id}>{product.name}</option>
                 ))}
               </Select>
             </FormControl>
@@ -83,9 +71,9 @@ export default function AddProductModal({ products, onSave }) {
               />
             </FormControl>
             <FormControl mt="5">
-              <FormLabel>Giá bán</FormLabel>
+              <FormLabel>Giá mua</FormLabel>
               <Input
-                placeholder="Giá bán"
+                placeholder="Giá mua"
                 value={price}
                 onChange={(e) => setPrice(+e.target.value)}
               />

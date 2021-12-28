@@ -13,7 +13,7 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
-import http from "../http";
+import http from "../../shared/util/http";
 
 
 export default function UpdateCustomerModal({ customer, onCustomerUpdated }) {

@@ -2,11 +2,11 @@ import { map } from "lodash";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Box, Heading, Button, Flex, Spacer } from "@chakra-ui/react";
-import http from "../http";
+import http from "../../shared/util/http";
 import { formatCurrency } from "../../shared/util/formatter";
-import Header from "../../shared/component/header";
-import DataTable from "../../shared/component/dataTable";
-import ViewDetail from "./viewDetail";
+import Header from "../../components/common/header";
+import DataTable from "../../components/common/dataTable";
+import ViewDetail from "../../components/sell-orders/viewDetail";
 
 const CustomTableCell = ({ value: initialValue, column: { id } }) => {
   if (id === "totalCost") {

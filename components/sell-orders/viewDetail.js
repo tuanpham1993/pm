@@ -18,7 +18,7 @@ import {
   Flex,
   Spacer,
 } from "@chakra-ui/react";
-import DataTable from "../../shared/component/dataTable";
+import DataTable from "../common/dataTable";
 import { formatCurrency } from "../../shared/util/formatter";
 
 const CustomTableCell = ({

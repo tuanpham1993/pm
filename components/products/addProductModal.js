@@ -14,16 +14,16 @@ import {
   Select,
   Input,
 } from "@chakra-ui/react";
-import http from "../http";
+import http from "../../shared/util/http";
 
-export default function UpdateProductModal({ product, onProductUpdated }) {
-  const [name, setName] = useState(product.name);
-  const [unit, setUnit] = useState(product.unit);
-  const [quantity, setQuantity] = useState(product.quantity);
-  const [inputPrice, setInputPrice] = useState(product.inputPrice);
+export default function AddProductModal({ onSave }) {
+  const [name, setName] = useState("");
+  const [unit, setUnit] = useState("Thùng");
+  const [quantity, setQuantity] = useState(0);
+  const [inputPrice, setInputPrice] = useState(0);
 
-  const updateProduct = async () => {
-    await http.patch(`products/${product.id}`, {
+  const addProduct = async () => {
+    await http.post("products", {
       name,
       unit,
       quantity,
@@ -31,27 +31,32 @@ export default function UpdateProductModal({ product, onProductUpdated }) {
     });
   };
 
+  const clear = () => {
+    setName("");
+    setUnit("Thùng");
+    setQuantity(0);
+    setInputPrice(0);
+  };
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleSave = async () => {
-    await updateProduct();
-    onProductUpdated({ id: product.id, name, unit, quantity, inputPrice });
+    await addProduct();
+    onSave();
     onClose();
+    clear();
   };
 
   return (
     <>
-      <a
-        onClick={onOpen}
-        style={{ color: "var(--chakra-colors-teal-500)", cursor: "pointer" }}
-      >
-        {product.name}
-      </a>
+      <Button onClick={onOpen} colorScheme="teal" size="lg">
+        Thêm
+      </Button>
 
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Cập nhật sản phẩm</ModalHeader>
+          <ModalHeader>Thêm sản phẩm</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>

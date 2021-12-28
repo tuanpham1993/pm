@@ -16,13 +16,13 @@ import {
 } from "@chakra-ui/react";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { useTable } from "react-table";
-import http from "../../http";
+import http from "../../../shared/util/http";
 import { formatCurrency } from "../../../shared/util/formatter";
-import Header from "../../../shared/component/header";
-import AddProductModal from "./addProductModal";
-import SelectCustomer from "./selectCustomer";
-import UpdateProductModal from "./updateItemModal";
-import AddSellOrder from "./addSellOrder";
+import Header from "../../../components/common/header";
+import AddProductModal from "../../../components/sell-orders/new/addProductModal";
+import SelectCustomer from "../../../components/sell-orders/new/selectCustomer";
+import UpdateProductModal from "../../../components/sell-orders/new/updateItemModal";
+import AddSellOrder from "../../../components/sell-orders/new/addSellOrder";
 // Create an editable cell renderer
 const CustomTableCell = ({
   value: initialValue,

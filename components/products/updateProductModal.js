@@ -1,15 +1,5 @@
-import { map } from "lodash";
 import React, { useEffect, useState } from "react";
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  chakra,
-  Box,
-  Heading,
   Button,
   Modal,
   ModalOverlay,
@@ -23,24 +13,29 @@ import {
   FormLabel,
   Select,
   Input,
-  Flex,
-  Spacer,
 } from "@chakra-ui/react";
+import http from "../../shared/util/http";
 
-export default function UpdateProductModal({
-  products,
-  product,
-  onProductUpdated,
-}) {
-  console.log({ onProductUpdated });
-  const [productId, setProductId] = useState(product.id);
+export default function UpdateProductModal({ product, onProductUpdated }) {
+  const [name, setName] = useState(product.name);
+  const [unit, setUnit] = useState(product.unit);
   const [quantity, setQuantity] = useState(product.quantity);
-  const [price, setPrice] = useState(product.price);
+  const [inputPrice, setInputPrice] = useState(product.inputPrice);
+
+  const updateProduct = async () => {
+    await http.patch(`products/${product.id}`, {
+      name,
+      unit,
+      quantity,
+      inputPrice,
+    });
+  };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleSave = async () => {
-    onProductUpdated({ id: productId, quantity, price });
+    await updateProduct();
+    onProductUpdated({ id: product.id, name, unit, quantity, inputPrice });
     onClose();
   };
 
@@ -61,16 +56,20 @@ export default function UpdateProductModal({
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Tên</FormLabel>
-              <Select
-                value={productId}
-                onChange={(e) => setProductId(e.target.value)}
-              >
-                {map(products, (product) => (
-                  <option value={product.id}>{product.name}</option>
-                ))}
-              </Select>
+              <Input
+                placeholder="Tên"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </FormControl>
-            <FormControl mt="3">
+            {/* <FormControl mt={5}>
+              <FormLabel>Đơn vị</FormLabel>
+              <Select value={unit} onChange={(e) => setUnit(e.target.value)}>
+                <option>Thùng</option>
+                <option>Bì</option>
+              </Select>
+            </FormControl> */}
+            <FormControl mt={5}>
               <FormLabel>Số lượng</FormLabel>
               <Input
                 placeholder="Số lượng"
@@ -78,12 +77,12 @@ export default function UpdateProductModal({
                 onChange={(e) => setQuantity(+e.target.value)}
               />
             </FormControl>
-            <FormControl mt="3">
-              <FormLabel>Giá bán</FormLabel>
+            <FormControl mt={5}>
+              <FormLabel>Giá vốn</FormLabel>
               <Input
-                placeholder="Giá bán"
-                value={price}
-                onChange={(e) => setPrice(+e.target.value)}
+                placeholder="Giá vốn"
+                value={inputPrice}
+                onChange={(e) => setInputPrice(+e.target.value)}
               />
             </FormControl>
           </ModalBody>

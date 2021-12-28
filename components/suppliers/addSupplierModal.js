@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import http from "../http";
 import {
   Button,
   Modal,
@@ -12,34 +11,33 @@ import {
   useDisclosure,
   FormControl,
   FormLabel,
-  Select,
   Input,
 } from "@chakra-ui/react";
-import { map } from "lodash";
+import http from "../../shared/util/http";
 
-export default function AddPaymentModal({ suppliers, onSave }) {
-  const [supplierId, setSupplierId] = useState(null);
-  const [amount, setAmount] = useState(null);
+export default function AddSupplierModal({ onSave }) {
+  const [name, setName] = useState("");
+  const [debt, setDebt] = useState(0);
 
-  useEffect(async () => {
-    if (!supplierId) {
-      setSupplierId(suppliers?.[0].id);
-    }
-  });
-
-  const addPayment = async () => {
-    await http.post("payments", {
-      supplierId,
-      amount,
+  const addSupplier = async () => {
+    await http.post("suppliers", {
+      name,
+      debt,
     });
+  };
+
+  const clear = () => {
+    setName("");
+    setDebt(0);
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleSave = async () => {
-    await addPayment();
+    await addSupplier();
     onSave();
     onClose();
+    clear();
   };
 
   return (
@@ -51,26 +49,23 @@ export default function AddPaymentModal({ suppliers, onSave }) {
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Thêm sản phẩm</ModalHeader>
+          <ModalHeader>Thêm nhà cung cấp</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel>Nhà cung cấp</FormLabel>
-              <Select
-                value={supplierId}
-                onChange={(e) => setSupplierId(e.target.value)}
-              >
-                {map(suppliers, (supplier) => (
-                  <option value={supplier.id}>{supplier.name}</option>
-                ))}
-              </Select>
+              <FormLabel>Tên</FormLabel>
+              <Input
+                placeholder="Tên"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </FormControl>
             <FormControl mt={5}>
-              <FormLabel>Số tiền</FormLabel>
+              <FormLabel>Dư nợ</FormLabel>
               <Input
-                placeholder="Số tiền"
-                value={amount}
-                onChange={(e) => setAmount(+e.target.value)}
+                placeholder="Dư nợ"
+                value={debt}
+                onChange={(e) => setDebt(+e.target.value)}
               />
             </FormControl>
           </ModalBody>
