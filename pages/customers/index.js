@@ -7,21 +7,7 @@ import AddCustomerModal from "../../components/customers/addCustomerModal";
 import UpdateCustomerModal from "../../components/customers/updateCustomerModal";
 import DataTable from "../../components/common/dataTable";
 
-const CustomTableCell = ({
-  value: initialValue,
-  row,
-  column: { id },
-  updateData,
-}) => {
-  if (id === "name") {
-    return (
-      <UpdateCustomerModal
-        customer={row.original}
-        onCustomerUpdated={updateData}
-      />
-    );
-  }
-
+const CustomTableCell = ({ value: initialValue, row, column: { id } }) => {
   if (id === "debt") {
     return formatCurrency(initialValue);
   }
@@ -48,17 +34,24 @@ export default function Customers() {
     {
       id: "action",
       Cell: ({ value, row }) => (
-        <Button
-          size="xs"
-          onClick={() => {
-            if (confirm("Bạn có muốn xoá khách hàng này?")) {
-              deleteCustomer(row.original.id);
-            }
-          }}
-          colorScheme="red"
-        >
-          Xoá
-        </Button>
+        <>
+          <UpdateCustomerModal
+            customer={row.original}
+            onCustomerUpdated={updateCustomer}
+          />
+          <Button
+            ml="1"
+            size="xs"
+            onClick={() => {
+              if (confirm("Bạn có muốn xoá khách hàng này?")) {
+                deleteCustomer(row.original.id);
+              }
+            }}
+            colorScheme="red"
+          >
+            Xoá
+          </Button>
+        </>
       ),
     },
   ];
@@ -109,7 +102,7 @@ export default function Customers() {
       <Header />
       <Box m={5}>
         <Flex mb={5}>
-          <Heading>khách hàng</Heading>
+          <Heading>Khách hàng</Heading>
           <Spacer />
           <AddCustomerModal onSave={onSave} />
         </Flex>
@@ -117,7 +110,6 @@ export default function Customers() {
           columns={columns}
           data={customers}
           customTableCell={CustomTableCell}
-          updateData={updateCustomer}
         />
       </Box>
     </Box>

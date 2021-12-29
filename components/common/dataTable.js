@@ -21,7 +21,7 @@ export default function DataTable({
     tableInstance;
 
   return (
-    <Table {...getTableProps()}>
+    <Table variant='striped' {...getTableProps()}>
       <Thead>
         {headerGroups.map((headerGroup) => (
           <Tr {...headerGroup.getHeaderGroupProps()}>

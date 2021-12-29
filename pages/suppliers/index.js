@@ -7,22 +7,8 @@ import AddSupplierModal from "../../components/suppliers/addSupplierModal";
 import UpdateSupplierModal from "../../components/suppliers/updateSupplierModal";
 import DataTable from "../../components/common/dataTable";
 
-const CustomTableCell = ({
-  value: initialValue,
-  row,
-  column: { id },
-  updateData,
-}) => {
-  if (id === "name") {
-    return (
-      <UpdateSupplierModal
-        supplier={row.original}
-        onSupplierUpdated={updateData}
-      />
-    );
-  }
-
-  if (["inputPrice", "totalCost"].includes(id)) {
+const CustomTableCell = ({ value: initialValue, row, column: { id } }) => {
+  if (id === "debt") {
     return formatCurrency(initialValue);
   }
 
@@ -48,17 +34,24 @@ export default function Suppliers() {
     {
       id: "action",
       Cell: ({ value, row }) => (
-        <Button
-          size="xs"
-          onClick={() => {
-            if (confirm('Bạn có muốn xoá nhà cung cấp này?')) {
-                deleteSupplier(row.original.id)}
-            }
-          } 
-          colorScheme="red"
-        >
-          Xoá
-        </Button>
+        <>
+          <UpdateSupplierModal
+            supplier={row.original}
+            onSupplierUpdated={updateSupplier}
+          />
+          <Button
+            ml="1"
+            size="xs"
+            onClick={() => {
+              if (confirm("Bạn có muốn xoá nhà cung cấp này?")) {
+                deleteSupplier(row.original.id);
+              }
+            }}
+            colorScheme="red"
+          >
+            Xoá
+          </Button>
+        </>
       ),
     },
   ];

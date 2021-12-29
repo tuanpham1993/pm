@@ -11,17 +11,7 @@ const CustomTableCell = ({
   value: initialValue,
   row,
   column: { id },
-  updateData,
 }) => {
-  if (id === "name") {
-    return (
-      <UpdateProductModal
-        product={row.original}
-        onProductUpdated={updateData}
-      />
-    );
-  }
-
   if (["inputPrice", "totalCost"].includes(id)) {
     return formatCurrency(initialValue);
   }
@@ -54,17 +44,24 @@ export default function Products() {
     {
       id: "action",
       Cell: ({ value, row }) => (
-        <Button
-          size="xs"
-          onClick={() => {
-            if (confirm("Bạn có muốn xoá sản phẩm này?")) {
-              deleteProduct(row.original.id);
-            }
-          }}
-          colorScheme="red"
-        >
-          Xoá
-        </Button>
+        <>
+          <UpdateProductModal
+            product={row.original}
+            onProductUpdated={updateProduct}
+          />
+          <Button
+            ml="1"
+            size="xs"
+            onClick={() => {
+              if (confirm("Bạn có muốn xoá sản phẩm này?")) {
+                deleteProduct(row.original.id);
+              }
+            }}
+            colorScheme="red"
+          >
+            Xoá
+          </Button>
+        </>
       ),
     },
   ];
@@ -131,7 +128,6 @@ export default function Products() {
           columns={columns}
           data={products}
           customTableCell={CustomTableCell}
-          updateData={updateProduct}
         />
       </Box>
     </Box>
