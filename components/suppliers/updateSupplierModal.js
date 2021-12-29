@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import http from "../../shared/util/http";
 
-
 export default function UpdateSupplierModal({ supplier, onSupplierUpdated }) {
   const [name, setName] = useState(supplier.name);
   const [debt, setDebt] = useState(supplier.debt);
@@ -38,12 +37,9 @@ export default function UpdateSupplierModal({ supplier, onSupplierUpdated }) {
 
   return (
     <>
-      <a
-        onClick={onOpen}
-        style={{ color: "var(--chakra-colors-teal-500)", cursor: "pointer" }}
-      >
-        {supplier.name}
-      </a>
+      <Button size="xs" colorScheme="teal" onClick={onOpen}>
+        Sửa
+      </Button>
 
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -70,7 +66,7 @@ export default function UpdateSupplierModal({ supplier, onSupplierUpdated }) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSave}>
+            <Button colorScheme="teal" mr={3} onClick={handleSave}>
               Lưu
             </Button>
             <Button onClick={onClose}>Huỷ</Button>

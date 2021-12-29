@@ -93,7 +93,7 @@ export default function AddProductModal({ products, onSave }) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSave}>
+            <Button colorScheme="teal" mr={3} onClick={handleSave}>
               Lưu
             </Button>
             <Button onClick={onClose}>Huỷ</Button>

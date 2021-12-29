@@ -41,12 +41,9 @@ export default function UpdateProductModal({ product, onProductUpdated }) {
 
   return (
     <>
-      <a
-        onClick={onOpen}
-        style={{ color: "var(--chakra-colors-teal-500)", cursor: "pointer" }}
-      >
-        {product.name}
-      </a>
+      <Button colorScheme="teal" size="xs" onClick={onOpen}>
+        Sửa
+      </Button>
 
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -88,7 +85,7 @@ export default function UpdateProductModal({ product, onProductUpdated }) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSave}>
+            <Button colorScheme="teal" mr={3} onClick={handleSave}>
               Lưu
             </Button>
             <Button onClick={onClose}>Huỷ</Button>
