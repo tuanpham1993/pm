@@ -6,6 +6,7 @@ import Header from "../../components/common/header";
 import AddProductModal from "../../components/products/addProductModal";
 import UpdateProductModal from "../../components/products/updateProductModal";
 import DataTable from "../../components/common/dataTable";
+import axios from "axios";
 
 const CustomTableCell = ({
   value: initialValue,
@@ -20,6 +21,7 @@ const CustomTableCell = ({
 };
 
 export default function Products() {
+  axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`)
   const columns = [
     {
       Header: "TT",
