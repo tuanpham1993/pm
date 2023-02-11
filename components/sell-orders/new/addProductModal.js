@@ -12,13 +12,17 @@ import {
   useDisclosure,
   FormControl,
   FormLabel,
-  Select,
   Input,
   Flex,
   Spacer,
 } from "@chakra-ui/react";
+import { Select } from "chakra-react-select";
 
 export default function AddProductModal({ products, onSave }) {
+  const productOptions = map(products, (product) => ({
+    value: product.id,
+    label: product.name,
+  }));
   const [productId, setProductId] = useState(null);
   const [quantity, setQuantity] = useState(0);
   const [price, setPrice] = useState(0);
@@ -37,10 +41,17 @@ export default function AddProductModal({ products, onSave }) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const updateProduct = (option) => {
+    setProductId(option)
+    setPrice(find(products, { id: option.value })?.sellPrice)
+  }
+
   const handleSave = async () => {
+    const id = productId.value;
+
     onSave({
-      id: productId,
-      name: find(products, { id: productId })?.name,
+      id,
+      name: find(products, { id: productId.value })?.name,
       quantity,
       price,
     });
@@ -66,13 +77,14 @@ export default function AddProductModal({ products, onSave }) {
             <FormControl>
               <FormLabel>Tên</FormLabel>
               <Select
+                name="colors"
+                options={productOptions}
+                placeholder="Chọn sản phẩm"
+                size="md"
+                closeMenuOnSelect={true}
                 value={productId}
-                onChange={(e) => setProductId(e.target.value)}
-              >
-                {map(products, (product) => (
-                  <option key={product.id} value={product.id}>{product.name}</option>
-                ))}
-              </Select>
+                onChange={updateProduct}
+              />
             </FormControl>
             <FormControl mt="5">
               <FormLabel>Số lượng</FormLabel>

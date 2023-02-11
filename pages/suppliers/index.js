@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Box, Heading, Button, Flex, Spacer } from "@chakra-ui/react";
+import { filter } from 'lodash';
+import { Box, Heading, Button, Flex, Spacer, Input } from "@chakra-ui/react";
 import http from "../../shared/util/http";
-import { formatCurrency } from "../../shared/util/formatter";
+import { formatCurrency, toLowerCaseNonAccentVietnamese } from "../../shared/util/formatter";
 import Header from "../../components/common/header";
 import AddSupplierModal from "../../components/suppliers/addSupplierModal";
 import UpdateSupplierModal from "../../components/suppliers/updateSupplierModal";
@@ -17,6 +18,7 @@ const CustomTableCell = ({ value: initialValue, row, column: { id } }) => {
 
 export default function Suppliers() {
   const [suppliers, setSuppliers] = useState(null);
+  const [filteredSuppliers, setFilteredSuppliers] = useState(null);
 
   const columns = [
     {
@@ -64,28 +66,44 @@ export default function Suppliers() {
   async function getSuppliers() {
     const { data: rawSuppliers } = await http.get("suppliers");
 
+    const items = rawSuppliers.map((supplier, index) => ({
+      ...supplier,
+      index: index + 1,
+    }))
+
     setSuppliers(
-      rawSuppliers.map((supplier, index) => ({
-        ...supplier,
-        index: index + 1,
-      }))
+    items  
     );
+
+    setFilteredSuppliers(items)
   }
 
   const updateSupplier = (partialSupplier) => {
-    setSuppliers(
-      suppliers.map((supplier) => {
-        if (supplier.id !== partialSupplier.id) {
-          return supplier;
-        }
+    const items = suppliers.map((supplier) => {
+      if (supplier.id !== partialSupplier.id) {
+        return supplier;
+      }
 
-        return {
-          ...supplier,
-          ...partialSupplier,
-        };
-      })
+      return {
+        ...supplier,
+        ...partialSupplier,
+      };
+    })
+
+    setSuppliers(
+      items
     );
+
+    setFilteredSuppliers(items)
   };
+
+  const filterSuppliers = (name) => {
+    if (name == "") {
+      setFilteredSuppliers(suppliers);
+    } else { 
+      setFilteredSuppliers(filter(suppliers, p => toLowerCaseNonAccentVietnamese(p.name.toLowerCase()).includes(toLowerCaseNonAccentVietnamese(name.toLowerCase()))))
+    }
+  }
 
   const onSave = async () => {
     getSuppliers();
@@ -104,11 +122,18 @@ export default function Suppliers() {
         <Flex mb={5}>
           <Heading>Nhà cung cấp</Heading>
           <Spacer />
+          <Input
+                placeholder="Tên"
+                width="100"
+                mt="1"
+                mr="3"
+                onChange={(e) => filterSuppliers(e.target.value)}
+              />
           <AddSupplierModal onSave={onSave} />
         </Flex>
         <DataTable
           columns={columns}
-          data={suppliers}
+          data={filteredSuppliers}
           updateData={updateSupplier}
           customTableCell={CustomTableCell}
         />

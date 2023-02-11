@@ -12,14 +12,23 @@ import {
   useDisclosure,
   FormControl,
   FormLabel,
-  Select,
   Input,
 } from "@chakra-ui/react";
 import { map } from "lodash";
+import { Select } from "chakra-react-select";
 
 export default function AddPaymentModal({ suppliers, onSave }) {
+  const supplierOptions = map(suppliers, (supplier) => ({
+    value: supplier.id,
+    label: supplier.name,
+  }));
   const [supplierId, setSupplierId] = useState(null);
   const [amount, setAmount] = useState(null);
+
+  const clear = () => {
+    setSupplierId(null);
+    setAmount(0);
+  };
 
   useEffect(async () => {
     if (!supplierId) {
@@ -29,7 +38,7 @@ export default function AddPaymentModal({ suppliers, onSave }) {
 
   const addPayment = async () => {
     await http.post("payments", {
-      supplierId,
+      supplierId: supplierId.value,
       amount,
     });
   };
@@ -40,6 +49,7 @@ export default function AddPaymentModal({ suppliers, onSave }) {
     await addPayment();
     onSave();
     onClose();
+    clear();
   };
 
   return (
@@ -57,13 +67,14 @@ export default function AddPaymentModal({ suppliers, onSave }) {
             <FormControl>
               <FormLabel>Nhà cung cấp</FormLabel>
               <Select
+                name="suppliers"
+                options={supplierOptions}
+                placeholder="Chọn nhà cung cấp"
+                size="md"
+                closeMenuOnSelect={true}
                 value={supplierId}
-                onChange={(e) => setSupplierId(e.target.value)}
-              >
-                {map(suppliers, (supplier) => (
-                  <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
-                ))}
-              </Select>
+                onChange={setSupplierId}
+              ></Select>
             </FormControl>
             <FormControl mt={5}>
               <FormLabel>Số tiền</FormLabel>

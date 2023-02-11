@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Box, Heading, Button, Flex, Spacer } from "@chakra-ui/react";
+import { Box, Heading, Button, Flex, Spacer, Input } from "@chakra-ui/react";
 import http from "../../shared/util/http";
-import { formatCurrency } from "../../shared/util/formatter";
+import { formatCurrency, toLowerCaseNonAccentVietnamese } from "../../shared/util/formatter";
 import Header from "../../components/common/header";
 import AddProductModal from "../../components/products/addProductModal";
 import UpdateProductModal from "../../components/products/updateProductModal";
 import DataTable from "../../components/common/dataTable";
 import axios from "axios";
+import { filter } from "lodash";
 
 const CustomTableCell = ({
   value: initialValue,
   row,
   column: { id },
 }) => {
-  if (["inputPrice", "totalCost"].includes(id)) {
+  if (["inputPrice", "sellPrice", "totalCost"].includes(id)) {
     return formatCurrency(initialValue);
   }
 
@@ -21,7 +22,6 @@ const CustomTableCell = ({
 };
 
 export default function Products() {
-  axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`)
   const columns = [
     {
       Header: "TT",
@@ -40,9 +40,13 @@ export default function Products() {
       accessor: "inputPrice",
     },
     {
-      Header: "Giá trị",
-      accessor: "totalCost",
+      Header: "Giá bán",
+      accessor: "sellPrice",
     },
+    // {
+    //   Header: "Giá trị",
+    //   accessor: "totalCost",
+    // },
     {
       id: "action",
       Cell: ({ value, row }) => (
@@ -69,6 +73,7 @@ export default function Products() {
   ];
 
   const [products, setProducts] = useState(null);
+  const [filteredProducts, setFilteredProducts] = useState(null);
 
   const deleteProduct = async (id) => {
     await http.delete(`products/${id}`);
@@ -78,34 +83,46 @@ export default function Products() {
   const getProducts = async () => {
     const { data: rawProducts } = await http.get("products");
 
-    setProducts(
-      rawProducts.map((product, index) => ({
-        ...product,
-        index: index + 1,
-        totalCost: product.inputPrice * product.quantity,
-      }))
-    );
+    const items = rawProducts.map((product, index) => ({
+      ...product,
+      index: index + 1,
+      totalCost: product.inputPrice * product.quantity,
+    }))
+    setProducts(items);
+
+    setFilteredProducts(items)
   };
 
   const updateProduct = (partialProduct) => {
+    const items = products.map((product) => {
+      if (product.id !== partialProduct.id) {
+        return product;
+      }
+
+      const mergedProduct = {
+        ...product,
+        ...partialProduct,
+      };
+
+      return {
+        ...mergedProduct,
+        totalCost: mergedProduct.inputPrice * mergedProduct.quantity,
+      };
+    })
     setProducts(
-      products.map((product) => {
-        if (product.id !== partialProduct.id) {
-          return product;
-        }
-
-        const mergedProduct = {
-          ...product,
-          ...partialProduct,
-        };
-
-        return {
-          ...mergedProduct,
-          totalCost: mergedProduct.inputPrice * mergedProduct.quantity,
-        };
-      })
+      items
     );
+
+    setFilteredProducts(items)
   };
+
+  const filterProducts = (name) => {
+    if (name == "") {
+      setFilteredProducts(products);
+    } else { 
+      setFilteredProducts(filter(products, p => toLowerCaseNonAccentVietnamese(p.name.toLowerCase()).includes(toLowerCaseNonAccentVietnamese(name.toLowerCase()))))
+    }
+  }
 
   const onSave = async () => {
     getProducts();
@@ -124,11 +141,19 @@ export default function Products() {
         <Flex mb={5}>
           <Heading>Sản phẩm</Heading>
           <Spacer />
+          <Input
+                placeholder="Tên"
+                // value={name}
+                width="100"
+                mt="1"
+                mr="3"
+                onChange={(e) => filterProducts(e.target.value)}
+              />
           <AddProductModal onSave={onSave} />
         </Flex>
         <DataTable
           columns={columns}
-          data={products}
+          data={filteredProducts}
           customTableCell={CustomTableCell}
         />
       </Box>

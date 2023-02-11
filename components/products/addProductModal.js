@@ -21,6 +21,7 @@ export default function AddProductModal({ onSave }) {
   const [unit, setUnit] = useState("Thùng");
   const [quantity, setQuantity] = useState(0);
   const [inputPrice, setInputPrice] = useState(0);
+  const [sellPrice, setSellPrice] = useState(0);
 
   const addProduct = async () => {
     await http.post("products", {
@@ -28,6 +29,7 @@ export default function AddProductModal({ onSave }) {
       unit,
       quantity,
       inputPrice,
+      sellPrice,
     });
   };
 
@@ -36,6 +38,7 @@ export default function AddProductModal({ onSave }) {
     setUnit("Thùng");
     setQuantity(0);
     setInputPrice(0);
+    setSellPrice(0);
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -83,11 +86,19 @@ export default function AddProductModal({ onSave }) {
               />
             </FormControl>
             <FormControl mt={5}>
-              <FormLabel>Giá vốn</FormLabel>
+              <FormLabel>Giá mua</FormLabel>
               <Input
-                placeholder="Giá vốn"
+                placeholder="Giá mua"
                 value={inputPrice}
                 onChange={(e) => setInputPrice(+e.target.value)}
+              />
+            </FormControl>
+            <FormControl mt={5}>
+              <FormLabel>Giá bán</FormLabel>
+              <Input
+                placeholder="Giá bán"
+                value={sellPrice}
+                onChange={(e) => setSellPrice(+e.target.value)}
               />
             </FormControl>
           </ModalBody>

@@ -21,6 +21,7 @@ export default function UpdateProductModal({ product, onProductUpdated }) {
   const [unit, setUnit] = useState(product.unit);
   const [quantity, setQuantity] = useState(product.quantity);
   const [inputPrice, setInputPrice] = useState(product.inputPrice);
+  const [sellPrice, setSellPrice] = useState(product.sellPrice);
 
   const updateProduct = async () => {
     await http.patch(`products/${product.id}`, {
@@ -28,6 +29,7 @@ export default function UpdateProductModal({ product, onProductUpdated }) {
       unit,
       quantity,
       inputPrice,
+      sellPrice,
     });
   };
 
@@ -35,7 +37,7 @@ export default function UpdateProductModal({ product, onProductUpdated }) {
 
   const handleSave = async () => {
     await updateProduct();
-    onProductUpdated({ id: product.id, name, unit, quantity, inputPrice });
+    onProductUpdated({ id: product.id, name, unit, quantity, inputPrice, sellPrice });
     onClose();
   };
 
@@ -75,11 +77,19 @@ export default function UpdateProductModal({ product, onProductUpdated }) {
               />
             </FormControl>
             <FormControl mt={5}>
-              <FormLabel>Giá vốn</FormLabel>
+              <FormLabel>Giá mua</FormLabel>
               <Input
-                placeholder="Giá vốn"
+                placeholder="Giá mua"
                 value={inputPrice}
                 onChange={(e) => setInputPrice(+e.target.value)}
+              />
+            </FormControl>
+            <FormControl mt={5}>
+              <FormLabel>Giá bán</FormLabel>
+              <Input
+                placeholder="Giá bán"
+                value={sellPrice}
+                onChange={(e) => setSellPrice(+e.target.value)}
               />
             </FormControl>
           </ModalBody>

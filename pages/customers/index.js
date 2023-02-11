@@ -1,7 +1,8 @@
+import { filter } from 'lodash'
 import React, { useEffect, useState } from "react";
-import { Box, Heading, Button, Flex, Spacer } from "@chakra-ui/react";
+import { Box, Heading, Button, Flex, Spacer, Input } from "@chakra-ui/react";
 import http from "../../shared/util/http";
-import { formatCurrency } from "../../shared/util/formatter";
+import { formatCurrency, toLowerCaseNonAccentVietnamese } from "../../shared/util/formatter";
 import Header from "../../components/common/header";
 import AddCustomerModal from "../../components/customers/addCustomerModal";
 import UpdateCustomerModal from "../../components/customers/updateCustomerModal";
@@ -17,6 +18,7 @@ const CustomTableCell = ({ value: initialValue, row, column: { id } }) => {
 
 export default function Customers() {
   const [customers, setCustomers] = useState(null);
+  const [filteredCustomers, setFilteredCustomers] = useState(null);
 
   const columns = [
     {
@@ -64,28 +66,44 @@ export default function Customers() {
   async function getCustomers() {
     const { data: rawCustomers } = await http.get("customers");
 
+    const items = rawCustomers.map((customer, index) => ({
+      ...customer,
+      index: index + 1,
+    }));
+
     setCustomers(
-      rawCustomers.map((customer, index) => ({
-        ...customer,
-        index: index + 1,
-      }))
+    items  
     );
+
+    setFilteredCustomers(items)
   }
 
   const updateCustomer = (partialCustomer) => {
-    setCustomers(
-      customers.map((customer) => {
-        if (customer.id !== partialCustomer.id) {
-          return customer;
-        }
+    const items = customers.map((customer) => {
+      if (customer.id !== partialCustomer.id) {
+        return customer;
+      }
 
-        return {
-          ...customer,
-          ...partialCustomer,
-        };
-      })
+      return {
+        ...customer,
+        ...partialCustomer,
+      };
+    });
+
+    setCustomers(
+      items  
     );
+
+    setFilteredCustomers(items)
   };
+
+  const filterCustomers = (name) => {
+    if (name == "") {
+      setFilteredCustomers(customers);
+    } else { 
+      setFilteredCustomers(filter(customers, p => toLowerCaseNonAccentVietnamese(p.name.toLowerCase()).includes(toLowerCaseNonAccentVietnamese(name.toLowerCase()))))
+    }
+  }
 
   const onSave = async () => {
     getCustomers();
@@ -104,11 +122,18 @@ export default function Customers() {
         <Flex mb={5}>
           <Heading>Khách hàng</Heading>
           <Spacer />
+          <Input
+                placeholder="Tên"
+                width="100"
+                mt="1"
+                mr="3"
+                onChange={(e) => filterCustomers(e.target.value)}
+              />
           <AddCustomerModal onSave={onSave} />
         </Flex>
         <DataTable
           columns={columns}
-          data={customers}
+          data={filteredCustomers}
           customTableCell={CustomTableCell}
         />
       </Box>

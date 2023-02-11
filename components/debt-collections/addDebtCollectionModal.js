@@ -12,14 +12,23 @@ import {
   useDisclosure,
   FormControl,
   FormLabel,
-  Select,
   Input,
 } from "@chakra-ui/react";
 import { map } from "lodash";
+import { Select } from "chakra-react-select";
 
 export default function AddDebtCollectionModal({ customers, onSave }) {
+  const customerOptions = map(customers, (customer) => ({
+    value: customer.id,
+    label: customer.name,
+  }));
   const [customerId, setCustomerId] = useState(null);
   const [amount, setAmount] = useState(null);
+
+  const clear = () => {
+    setCustomerId(null);
+    setAmount(0);
+  };
 
   useEffect(async () => {
     if (!customerId) {
@@ -29,7 +38,7 @@ export default function AddDebtCollectionModal({ customers, onSave }) {
 
   const addDebtCollection = async () => {
     await http.post("debt-collections", {
-      customerId,
+      customerId: customerId.value,
       amount,
     });
   };
@@ -40,6 +49,7 @@ export default function AddDebtCollectionModal({ customers, onSave }) {
     await addDebtCollection();
     onSave();
     onClose();
+    clear();
   };
 
   return (
@@ -51,19 +61,20 @@ export default function AddDebtCollectionModal({ customers, onSave }) {
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Thêm sản phẩm</ModalHeader>
+          <ModalHeader>Thêm</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Khách hàng</FormLabel>
               <Select
+                name="customers"
+                options={customerOptions}
+                placeholder="Chọn khách hàng"
+                size="md"
+                closeMenuOnSelect={true}
                 value={customerId}
-                onChange={(e) => setCustomerId(e.target.value)}
-              >
-                {map(customers, (customer) => (
-                  <option key={customer.id} value={customer.id}>{customer.name}</option>
-                ))}
-              </Select>
+                onChange={setCustomerId}
+              ></Select>
             </FormControl>
             <FormControl mt={5}>
               <FormLabel>Số tiền</FormLabel>
