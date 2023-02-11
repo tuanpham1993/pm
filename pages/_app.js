@@ -75,6 +75,7 @@ function MyApp({ Component, pageProps }) {
               <Input
                 placeholder="Mật khẩu"
                 value={password}
+                type="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
