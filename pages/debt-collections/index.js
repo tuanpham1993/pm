@@ -24,7 +24,7 @@ export default function DebtCollections() {
       accessor: "index",
     },
     {
-      Header: "Nhà cung cấp",
+      Header: "Khách hàng",
       accessor: "customerName",
     },
     {
@@ -73,7 +73,7 @@ export default function DebtCollections() {
       <Header />
       <Box m={5}>
         <Flex mb={5}>
-          <Heading>Trả nợ</Heading>
+          <Heading>Thu nợ</Heading>
           <Spacer />
           <AddDebtCollectionModal customers={customers} onSave={onSave} />
         </Flex>
