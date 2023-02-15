@@ -43,10 +43,10 @@ export default function Products() {
       Header: "Giá bán",
       accessor: "sellPrice",
     },
-    // {
-    //   Header: "Giá trị",
-    //   accessor: "totalCost",
-    // },
+    {
+      Header: "Giá trị",
+      accessor: "totalCost",
+    },
     {
       id: "action",
       Cell: ({ value, row }) => (
