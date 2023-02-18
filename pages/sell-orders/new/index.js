@@ -1,4 +1,4 @@
-import { map } from "lodash";
+import { filter, map } from "lodash";
 import React, { useEffect, useState } from "react";
 import {
   Table,
@@ -105,10 +105,13 @@ export default function SellOrderItems() {
   const [items, setItems] = useState([]);
   const [customerId, setCustomerId] = useState(null);
 
-  const deleteItem = (index) => {
+  const deleteItem = (id) => {
     const clonedItems = items.slice();
-    clonedItems.splice(index, 1);
-    setItems(clonedItems);
+    const filteredItems = filter(
+      clonedItems,
+      ({ id: itemId }) => itemId !== id
+    );
+    setItems(filteredItems);
   };
 
   const columns = [

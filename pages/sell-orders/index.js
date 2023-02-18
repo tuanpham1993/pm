@@ -9,7 +9,7 @@ import DataTable from "../../components/common/dataTable";
 import ViewDetail from "../../components/sell-orders/viewDetail";
 
 const CustomTableCell = ({ value: initialValue, column: { id } }) => {
-  if (id === "totalCost") {
+  if (["totalCost", "totalProfit"].includes(id)) {
     return formatCurrency(initialValue);
   }
 
@@ -32,6 +32,10 @@ export default function SellOOrders() {
     {
       Header: "Giá trị",
       accessor: "totalCost",
+    },
+    {
+      Header: "Lợi nhuận",
+      accessor: "totalProfit",
     },
     {
       Header: "Thời gian",
