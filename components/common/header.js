@@ -66,6 +66,11 @@ const Header = (props) => {
             Thu nợ
           </Link>
         </Heading>
+        <Heading as="h1" size="sm" letterSpacing={"tighter"}>
+          <Link href="/profits" style={{ cursor: "pointer" }}>
+            Lợi nhuận
+          </Link>
+        </Heading>
       </Stack>
     </Flex>
   );
